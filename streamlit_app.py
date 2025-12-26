@@ -2,10 +2,6 @@ import streamlit as st
 import time
 import random
 
-# =========================
-# STRUKTUR MULTI LINKED LIST
-# =========================
-
 class Child:
     def __init__(self, data):
         self.data = data
@@ -15,11 +11,6 @@ class Parent:
     def __init__(self):
         self.first_child = None
         self.next = None
-
-
-# =========================
-# MEMBANGUN MULTI LINKED LIST
-# =========================
 
 def build_multi_linked_list(num_parent, num_child):
     head = Parent()
@@ -46,11 +37,6 @@ def build_multi_linked_list(num_parent, num_child):
 
     return head
 
-
-# =========================
-# PENCARIAN ITERATIF
-# =========================
-
 def search_iterative(head, key):
     p = head
     while p is not None:
@@ -61,11 +47,6 @@ def search_iterative(head, key):
             c = c.next
         p = p.next
     return False
-
-
-# =========================
-# PENCARIAN REKURSIF
-# =========================
 
 def search_child_recursive(c, key):
     if c is None:
@@ -80,11 +61,6 @@ def search_recursive(p, key):
     if search_child_recursive(p.first_child, key):
         return True
     return search_recursive(p.next, key)
-
-
-# =========================
-# STREAMLIT UI
-# =========================
 
 st.title("Analisis Kompleksitas Algoritma")
 st.subheader("Pencarian Data pada Multi Linked List")

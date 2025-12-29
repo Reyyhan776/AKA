@@ -1,6 +1,5 @@
 import streamlit as st
 import time
-import random
 
 class Child:
     def __init__(self, data):
@@ -15,8 +14,8 @@ class Parent:
 def build_multi_linked_list(num_parent, num_child):
     head = Parent()
     current_parent = head
-
     value = 1
+
     for i in range(num_parent):
         first_child = Child(value)
         current_child = first_child
@@ -66,49 +65,42 @@ st.title("Analisis Kompleksitas Algoritma")
 st.subheader("Pencarian Data pada Multi Linked List")
 st.write("Perbandingan Algoritma Iteratif vs Rekursif")
 
-st.sidebar.header("Parameter Data")
+st.sidebar.header("Parameter Eksperimen")
 
 num_parent = st.sidebar.number_input(
-    "Jumlah Parent",
-    min_value=1,
-    max_value=500,
-    value=10
+    "Jumlah Parent", min_value=1, max_value=500, value=10
 )
 
 num_child = st.sidebar.number_input(
-    "Jumlah Child per Parent",
-    min_value=1,
-    max_value=200,
-    value=10
+    "Jumlah Child per Parent", min_value=1, max_value=200, value=10
 )
 
 iterations = st.sidebar.number_input(
-    "Jumlah Pengulangan Eksperimen",
-    min_value=1,
-    max_value=50,
-    value=10
+    "Jumlah Pengulangan Eksperimen", min_value=1, max_value=50, value=10
+)
+
+position = st.sidebar.selectbox(
+    "Posisi Data yang Dicari",
+    ("Paling Awal (Best Case)", "Paling Akhir (Worst Case)")
 )
 
 if st.sidebar.button("Jalankan Analisis"):
-    st.info("Membangun Multi Linked List...")
     head = build_multi_linked_list(num_parent, num_child)
 
-    max_value = num_parent * num_child
-    key = random.randint(1, max_value)
+    if position == "Paling Awal (Best Case)":
+        key = 1
+    else:
+        key = num_parent * num_child
 
     iter_times = []
     rec_times = []
 
-    st.info("Menjalankan eksperimen...")
-
-    for i in range(iterations):
-        # Iteratif
+    for _ in range(iterations):
         start = time.perf_counter()
         search_iterative(head, key)
         end = time.perf_counter()
         iter_times.append(end - start)
 
-        # Rekursif
         start = time.perf_counter()
         search_recursive(head, key)
         end = time.perf_counter()
@@ -117,11 +109,9 @@ if st.sidebar.button("Jalankan Analisis"):
     avg_iter = sum(iter_times) / iterations
     avg_rec = sum(rec_times) / iterations
 
-    st.success("Eksperimen selesai!")
-
-    st.subheader("Hasil Running Time")
-    st.write(f"**Rata-rata Iteratif:** {avg_iter:.6f} detik")
-    st.write(f"**Rata-rata Rekursif:** {avg_rec:.6f} detik")
+    st.subheader("Hasil Running Time (Rata-rata)")
+    st.write(f"Iteratif : {avg_iter:.6f} detik")
+    st.write(f"Rekursif : {avg_rec:.6f} detik")
 
     st.subheader("Grafik Perbandingan Running Time")
     st.line_chart({
@@ -129,17 +119,17 @@ if st.sidebar.button("Jalankan Analisis"):
         "Rekursif": rec_times
     })
 
-    st.subheader("Analisis Singkat")
-    if avg_iter < avg_rec:
+    st.subheader("Analisis")
+    if position == "Paling Awal (Best Case)":
         st.write(
-            "Algoritma iteratif menunjukkan performa yang lebih baik "
-            "dibandingkan algoritma rekursif karena tidak memiliki overhead "
-            "pemanggilan fungsi dan penggunaan stack."
+            "Data berada pada posisi paling awal sehingga pencarian langsung berhenti. "
+            "Kedua algoritma memiliki kompleksitas waktu O(1)."
         )
     else:
         st.write(
-            "Algoritma rekursif memiliki running time yang sebanding, "
-            "namun overhead stack dapat memengaruhi performa pada ukuran data besar."
+            "Data berada pada posisi paling akhir sehingga seluruh parent dan child "
+            "harus ditelusuri. Kedua algoritma memiliki kompleksitas waktu O(n × m), "
+            "namun algoritma iteratif lebih efisien secara praktis."
         )
 
 st.markdown("---")
